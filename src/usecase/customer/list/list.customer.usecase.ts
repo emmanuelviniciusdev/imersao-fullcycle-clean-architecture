@@ -17,6 +17,22 @@ export class ListCustomerUsecase extends UsecaseAbstract<
         input: InputListCustomerUsecaseDTO
     ): Promise<OutputListCustomerUsecaseDTO> {
         const customers = await this.repository.findAll()
-        return { customers }
+
+        const customersOutput = customers.map((c) => ({
+            id: c.id,
+            name: c.name,
+            address: {
+                street: c.address.street,
+                number: c.address.number,
+                zipCode: c.address.zipCode,
+                city: c.address.city,
+            },
+            active: c.active,
+            rewardPoints: c.rewardPoints,
+        }))
+
+        return {
+            customers: customersOutput,
+        }
     }
 }
