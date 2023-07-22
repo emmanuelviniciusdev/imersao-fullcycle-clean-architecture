@@ -1,7 +1,11 @@
 import Address from '../value-object/address'
 import CustomerInterface from './customer.interface'
+import EntityAbstract from '../../@shared/entity/entity.abstract'
 
-export default class Customer implements CustomerInterface {
+export default class Customer
+    extends EntityAbstract
+    implements CustomerInterface
+{
     private _id: string
     private _name: string
     private _address?: Address
@@ -15,6 +19,8 @@ export default class Customer implements CustomerInterface {
         active?: boolean,
         rewardPoints?: number
     ) {
+        super()
+
         this._id = id
         this._name = name
         this._address = address
@@ -22,6 +28,8 @@ export default class Customer implements CustomerInterface {
         this._rewardPoints = rewardPoints ?? 0
 
         this._validate()
+
+        this.notification.throwNotificationErrorIfHasNotifications('customer')
     }
 
     activate() {
@@ -72,11 +80,17 @@ export default class Customer implements CustomerInterface {
 
     private _validate() {
         if (!this._id) {
-            throw new Error('ID is required')
+            this.notification.add({
+                context: 'customer',
+                message: 'ID is required',
+            })
         }
 
         if (!this._name) {
-            throw new Error('Name is required')
+            this.notification.add({
+                context: 'customer',
+                message: 'Name is required',
+            })
         }
     }
 }
