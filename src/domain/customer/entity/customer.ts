@@ -1,6 +1,7 @@
 import Address from '../value-object/address'
 import CustomerInterface from './customer.interface'
 import EntityAbstract from '../../@shared/entity/entity.abstract'
+import CustomerValidatorFactory from '../factory/customer.validator.factory'
 
 export default class Customer
     extends EntityAbstract
@@ -79,18 +80,6 @@ export default class Customer
     }
 
     private _validate() {
-        if (!this._id) {
-            this.notification.add({
-                context: 'customer',
-                message: 'ID is required',
-            })
-        }
-
-        if (!this._name) {
-            this.notification.add({
-                context: 'customer',
-                message: 'Name is required',
-            })
-        }
+        CustomerValidatorFactory.create().validate(this)
     }
 }
