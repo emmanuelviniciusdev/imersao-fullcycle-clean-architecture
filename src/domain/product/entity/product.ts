@@ -1,5 +1,6 @@
 import ProductInterface from './product.interface'
 import EntityAbstract from '../../@shared/entity/entity.abstract'
+import ProductValidatorFactory from '../factory/product.validator.factory'
 
 export default class Product
     extends EntityAbstract
@@ -42,25 +43,6 @@ export default class Product
     }
 
     private _validate() {
-        if (!this._id) {
-            this.notification.add({
-                context: 'product',
-                message: 'ID is required',
-            })
-        }
-
-        if (!this._name) {
-            this.notification.add({
-                context: 'product',
-                message: 'Name is required',
-            })
-        }
-
-        if (this._price <= 0) {
-            this.notification.add({
-                context: 'product',
-                message: 'Price must be greater than 0',
-            })
-        }
+        ProductValidatorFactory.create().validate(this)
     }
 }
