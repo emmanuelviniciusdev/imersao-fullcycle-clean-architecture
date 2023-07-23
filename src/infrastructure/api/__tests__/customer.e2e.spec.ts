@@ -29,6 +29,16 @@ describe('Customer E2E Tests', () => {
 
         expect(response.status).toBe(200)
         expect(response.body.customers).toHaveLength(1)
+
+        const responseXML = await request(app)
+            .get('/customer/list')
+            .set({ Accept: 'application/xml' })
+            .send()
+
+        expect(responseXML.status).toBe(200)
+        expect(responseXML.text).toContain(
+            '<?xml version="1.0" encoding="UTF-8"?>'
+        )
     })
 
     it('should not create a customer', async () => {

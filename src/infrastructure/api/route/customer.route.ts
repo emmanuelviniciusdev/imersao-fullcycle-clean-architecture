@@ -3,6 +3,7 @@ import { CreateCustomerUsecase } from '../../../usecase/customer/create/create.c
 import CustomerRepository from '../../customer/repository/sequelize/customer.repository'
 import { InputCreateCustomerUsecaseDTO } from '../../../usecase/customer/create/create.customer.usecase.dto'
 import { ListCustomerUsecase } from '../../../usecase/customer/list/list.customer.usecase'
+import CustomerPresenter from '../presenters/customer.presenter'
 
 export const router = Router()
 
@@ -12,7 +13,12 @@ router.get('/list', async (req: Request, res: Response) => {
 
     try {
         const output = await usecase.execute({})
-        res.status(200).send(output)
+
+        res.format({
+            json: async () => res.status(200).send(output),
+            xml: async () =>
+                res.status(200).send(CustomerPresenter.listXML(output)),
+        })
     } catch (err) {
         res.status(500).send(err)
     }
