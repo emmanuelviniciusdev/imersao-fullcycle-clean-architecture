@@ -1,16 +1,24 @@
 import ProductInterface from './product.interface'
+import EntityAbstract from '../../@shared/entity/entity.abstract'
 
-export default class Product implements ProductInterface {
+export default class Product
+    extends EntityAbstract
+    implements ProductInterface
+{
     private _id: string
     private _name: string
     protected _price: number
 
     constructor(id: string, name: string, price: number) {
+        super()
+
         this._id = id
         this._name = name
         this._price = price
 
         this._validate()
+
+        this.notification.throwNotificationErrorIfHasNotifications('product')
     }
 
     changeName(name: string) {
@@ -35,15 +43,24 @@ export default class Product implements ProductInterface {
 
     private _validate() {
         if (!this._id) {
-            throw new Error('ID is required')
+            this.notification.add({
+                context: 'product',
+                message: 'ID is required',
+            })
         }
 
         if (!this._name) {
-            throw new Error('Name is required')
+            this.notification.add({
+                context: 'product',
+                message: 'Name is required',
+            })
         }
 
         if (this._price <= 0) {
-            throw new Error('Price must be greater than 0')
+            this.notification.add({
+                context: 'product',
+                message: 'Price must be greater than 0',
+            })
         }
     }
 }
